@@ -66,11 +66,13 @@ public class DataBaseConfig {
         ds.setMinEvictableIdleTimeMillis(Long.valueOf(env.getRequiredProperty("db.minEvictableIdleTimeMillis")));
         ds.setTestOnBorrow(Boolean.valueOf(env.getRequiredProperty("db.testOnBorrow")));
         ds.setValidationQuery(env.getRequiredProperty("db.validationQuery"));
+        System.out.println("Getting dataSource");
         return ds;
     }
 
     @Bean
-    public PlatformTransactionManager platformTransactionManager() {
+    public PlatformTransactionManager transactionManager() {
+        System.out.println("Getting manager");
         JpaTransactionManager manager = new JpaTransactionManager();
         manager.setEntityManagerFactory(entityManagerFactory().getObject());
         return manager;

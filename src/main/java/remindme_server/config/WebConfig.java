@@ -23,5 +23,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         converter.setObjectMapper(new ObjectMapper());
         converter.setSupportedMediaTypes(Collections.singletonList(MediaType.APPLICATION_JSON));
         converters.add(converter);
+        System.out.println("Configuring message Converters");
     }
 }

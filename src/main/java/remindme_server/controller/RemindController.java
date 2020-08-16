@@ -1,28 +1,68 @@
 package remindme_server.controller;
 
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 import remindme_server.entity.Remind;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import remindme_server.service.ReminderService;
 
-import java.util.Date;
+import java.util.*;
 
-@Controller
-@RequestMapping("/remind")
+@RestController
 public class RemindController {
 
-    @RequestMapping(value = "/get", method = RequestMethod.GET)
+    @Autowired
+    private ReminderService service;
+
+    @RequestMapping(value = "/reminders", method = RequestMethod.GET)
     public @ResponseBody
-    Remind getReminder() {
-        return createMockRemind();
+    List<Remind> getAllReminders() {
+        return service.getAll();
     }
 
-    private Remind createMockRemind() {
+    @RequestMapping(value = "/reminder/get", method = RequestMethod.GET)
+    @ResponseBody
+    public Remind getRemind() {
         Remind remind = new Remind();
         remind.setId(1);
         remind.setRemindDate(new Date());
-        remind.setTitle("My First Remind");
+        remind.setTitle("My First remind");
         return remind;
+    }
+
+    @RequestMapping(value = "/reminder/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public Remind getReminder(@PathVariable("id") long remindID) {
+        return service.getByID(remindID);
+    }
+
+    @RequestMapping(value = "/reminders", method = RequestMethod.POST)
+    public @ResponseBody
+    Remind setReminder(@RequestBody Remind remind) {
+        System.out.println("reminder Object: " + remind);
+        return service.save(remind);
+    }
+
+    @RequestMapping(value = "/reminder/{id}", method = RequestMethod.PATCH)
+    public @ResponseBody
+    Remind setReminder(@PathVariable("id") long remindID, @RequestBody Remind remind) {
+        remind.setId(remindID);
+        return service.save(remind);
+    }
+
+    @RequestMapping(value = "/reminders/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody
+    Map delete(@PathVariable long id) {
+        Map<String, String> o = new HashMap<>();
+        try {
+            service.remove(id);
+            o.put("code", "200");
+            o.put("message", "success");
+        } catch (Exception exception) {
+            o.put("code", "400");
+            o.put("message", exception.getMessage());
+        }
+        return Collections.singletonMap("response", o);
     }
 }
