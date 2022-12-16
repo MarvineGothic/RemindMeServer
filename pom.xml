@@ -20,7 +20,7 @@
         </plugins>
     </build>
     <properties>
-        <spring.version>5.2.3.RELEASE</spring.version>
+        <spring.version>5.2.22.RELEASE</spring.version>
         <javax.servlet-api.version>4.0.1</javax.servlet-api.version>
         <spring-data-jpa.version>2.1.10.RELEASE</spring-data-jpa.version>
         <postgresql.version>42.2.6</postgresql.version>
